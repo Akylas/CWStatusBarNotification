@@ -215,7 +215,7 @@ static void cancel_delayed_block(CWDelayedBlockHandle delayedHandle)
         self.tapGestureRecognizer.numberOfTapsRequired = 1;
 
         // create default tap block
-        __weak typeof(self) weakSelf = self;
+        __weak __typeof(self)weakSelf = self;
         self.notificationTappedBlock = ^(void) {
             if (!weakSelf.notificationIsDismissing) {
                 [weakSelf dismissNotification];
@@ -386,12 +386,15 @@ static void cancel_delayed_block(CWDelayedBlockHandle delayedHandle)
 
 - (void)createStatusBarView
 {
+    if (self.notificationAnimationType != CWNotificationAnimationTypeReplace) {
+        return;
+    }
     self.statusBarView = [[UIView alloc] initWithFrame:[self getNotificationLabelFrame]];
     self.statusBarView.clipsToBounds = YES;
-    if (self.notificationAnimationType == CWNotificationAnimationTypeReplace) {
-        UIView *statusBarImageView = [[UIScreen mainScreen] snapshotViewAfterScreenUpdates:YES];
-        [self.statusBarView addSubview:statusBarImageView];
-    }
+//    if (self.notificationAnimationType == CWNotificationAnimationTypeReplace) {
+//        UIView *statusBarImageView = [[UIScreen mainScreen] snapshotViewAfterScreenUpdates:YES];
+//        [self.statusBarView addSubview:statusBarImageView];
+//    }
     [self.notificationWindow.rootViewController.view addSubview:self.statusBarView];
     [self.notificationWindow.rootViewController.view sendSubviewToBack:self.statusBarView];
 }
