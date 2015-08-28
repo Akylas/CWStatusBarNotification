@@ -36,7 +36,7 @@
     NSDictionary *attributes = [NSDictionary dictionaryWithObject:font forKey:NSFontAttributeName];
     [self.segFromStyle setTitleTextAttributes:attributes forState:UIControlStateNormal];
     [self.segToStyle setTitleTextAttributes:attributes forState:UIControlStateNormal];
-    
+    self.txtNotificationMessage.delegate = self;
     // initialize CWNotification
     self.notification = [CWStatusBarNotification new];
     
@@ -60,10 +60,20 @@
     [self updateDurationLabel];
 }
 
+-(BOOL) textFieldShouldReturn:(UITextField *)textField{
+    
+    [textField resignFirstResponder];
+    return YES;
+}
+
 # pragma mark - show notification
 
 - (void)setupNotification
 {
+    self.notification = [CWStatusBarNotification new];
+    
+    // set default blue color (since iOS 7.1, default window tintColor is black)
+    self.notification.notificationLabelBackgroundColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
     self.notification.notificationAnimationInStyle = self.segFromStyle.selectedSegmentIndex;
     self.notification.notificationAnimationOutStyle = self.segToStyle.selectedSegmentIndex;
     self.notification.notificationStyle = self.notificationStyle.selectedSegmentIndex == 0 ?
